@@ -1,11 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Мой сайт</title>
+  <title>Начальная школа — Математика</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; text-align: center; background: #f0f8ff; margin: 0; padding: 20px; }
+    h1 { font-size: 2em; margin-bottom: 10px; }
+    .question { font-size: 1.4em; margin: 20px 0; }
+    .options button {
+      display: block; width: 100%; max-width: 400px; margin: 10px auto;
+      font-size: 1.2em; padding: 10px; border: none; border-radius: 6px;
+      background: #e0e0e0; cursor: pointer;
+    }
+    .options button.correct { background: #a8e6a1; }
+    .options button.wrong { background: #f6a5a5; }
+    .next-btn, .restart-btn {
+      margin-top: 20px; font-size: 1em; padding: 10px 20px; cursor: pointer;
+    }
+    .result { font-size: 1.5em; margin-top: 30px; }
+  </style>
 </head>
 <body>
-  <h1>Сайт работает!</h1>
-  <p>Добро пожаловать на мой первый GitHub Pages сайт 🚀</p>
+
+<h1>НАЧАЛЬНАЯ ШКОЛА — ТЕСТ ПО МАТЕМАТИКЕ</h1>
+<div id="quiz-container">
+  <div id="question" class="question"></div>
+  <div class="options" id="options"></div>
+  <div id="explanation"></div>
+  <button id="next" class="next-btn" style="display:none;">Следующий вопрос</button>
+  <div id="result" class="result"></div>
+  <button id="restart" class="restart-btn" style="display:none;" onclick="location.reload()">Пройти снова</button>
+</div>
+
+<script>
+const quiz = [
+  {
+    "question": "8. Какая запись равна 11³ (одиннадцать в третьей степени)?",
+    "options": [
+      "11 + 11 + 11",
+      "11 × 11 × 11",
+      "11 × 3",
+      "3 × 3 × 3 × 3 × 3 × 3 × 3 × 3 × 3 × 3 × 3"
+    ],
+    "answer": 1,
+    "explanation": "11 × 11 × 11 = 1331. Это и есть 11³ — третья степень числа 11."
+  }
+  // сюда можно добавить остальные задания
+];
+
+let current = 0, score = 0;
+
+function showQuestion() {
+  const q = quiz[current];
+  document.getElementById("question").textContent = q.question;
+  const opts = document.getElementById("options");
+  opts.innerHTML = "";
+  document.getElementById("explanation").textContent = "";
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (q.answer !== null) {
+        if (i === q.answer) {
+          btn.classList.add("correct");
+          score++;
+        } else {
+          btn.classList.add("wrong");
+        }
+      }
+      document.querySelectorAll("#options button").forEach(b => b.disabled = true);
+      document.getElementById("explanation").textContent = q.explanation;
+      document.getElementById("next").style.display = "inline-block";
+    };
+    opts.appendChild(btn);
+  });
+}
+
+document.getElementById("next").onclick = () => {
+  current++;
+  if (current < quiz.length) {
+    showQuestion();
+    document.getElementById("next").style.display = "none";
+  } else {
+    document.getElementById("quiz-container").innerHTML =
+      `<div class="result">Вы прошли тест! Результат: ${score} из ${quiz.length} баллов</div>
+       <button class="restart-btn" onclick="location.reload()">Пройти снова</button>`;
+  }
+};
+
+showQuestion();
+</script>
+
 </body>
 </html>
